@@ -32,6 +32,8 @@ import (
 	"sync/atomic"
 	"time"
 
+	"encoding/hex"
+
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/hpack"
 	"google.golang.org/grpc/codes"
@@ -1153,6 +1155,7 @@ func (t *http2Client) handleData(f *http2.DataFrame) {
 			buffer := t.bufferPool.get()
 			buffer.Reset()
 			buffer.Write(f.Data())
+			logger.Infof("http2_client: got data:\n%v", hex.Dump(f.Data()))
 			s.write(recvMsg{buffer: buffer})
 		}
 	}
